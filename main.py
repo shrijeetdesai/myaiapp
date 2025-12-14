@@ -1,5 +1,5 @@
-import os
 import streamlit as st
+import os
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.prompts import PromptTemplate
 
@@ -10,16 +10,12 @@ st.set_page_config(
     layout="centered"
 )
 
-# ------------------ SIDEBAR ------------------
-st.sidebar.header("🔐 Configuration")
-api_key = st.sidebar.text_input(
-    "Google Gemini API Key",
-    type="password",
-    help="Get it from Google AI Studio"
-)
+# ------------------ LOAD API KEY FROM STREAMLIT SECRETS ------------------
+if "GOOGLE_API_KEY" not in st.secrets:
+    st.error("GOOGLE_API_KEY not found in Streamlit Secrets.")
+    st.stop()
 
-if api_key:
-    os.environ["GOOGLE_API_KEY"] = api_key
+os.environ["GOOGLE_API_KEY"] = st.secrets["GOOGLE_API_KEY"]
 
 # ------------------ MAIN UI ------------------
 st.title("📋 AI Research List Generator")
@@ -32,10 +28,16 @@ st.divider()
 col1, col2 = st.columns(2)
 
 with col1:
-    topic = st.text_input("🔍 Topic", placeholder="e.g. Machine Learning tools")
+    topic = st.text_input(
+        "🔍 Topic",
+        placeholder="e.g. Machine Learning tools"
+    )
 
 with col2:
-    source = st.text_input("🌐 Source Website", placeholder="e.g. wikipedia.org")
+    source = st.text_input(
+        "🌐 Source Website",
+        placeholder="e.g. wikipedia.org"
+    )
 
 number = st.slider(
     "📌 Number of items",
@@ -66,11 +68,9 @@ gemini_model = ChatGoogleGenerativeAI(
 
 chain = prompt | gemini_model
 
-# ------------------ BUTTON ------------------
+# ------------------ ACTION ------------------
 if st.button("🚀 Generate List"):
-    if not api_key:
-        st.error("Please enter your Google API Key in the sidebar.")
-    elif not topic or not source:
+    if not topic or not source:
         st.warning("Please fill all fields.")
     else:
         with st.spinner("Researching... 🔎"):
