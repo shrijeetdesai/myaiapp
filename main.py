@@ -42,7 +42,7 @@ with col2:
 number = st.slider(
     "📌 Number of items",
     min_value=1,
-    max_value=10,
+    max_value=50,
     value=5
 )
 
@@ -83,5 +83,6 @@ if st.button("🚀 Generate List"):
         st.success("✅ Done!")
         st.markdown("### 📄 Generated List")
         st.markdown(response.content)
+
 
 
