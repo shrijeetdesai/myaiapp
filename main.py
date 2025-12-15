@@ -1,7 +1,7 @@
 import streamlit as st
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain.prompts import PromptTemplate
+from langchain import PromptTemplate
 
 # ------------------ CONFIG ------------------
 st.set_page_config(
@@ -83,3 +83,4 @@ if st.button("🚀 Generate List"):
         st.success("✅ Done!")
         st.markdown("### 📄 Generated List")
         st.markdown(response.content)
+
